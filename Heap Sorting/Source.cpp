@@ -16,6 +16,7 @@ int main()
 	bool min = true;
 	const int arraySize = 20;
 	int array[] = { 10, 4, 9, 2, 6, 7, 1, 0, 3, 5, 8, 12, 18, 16, 11, 14, 17, 13, 15, 19};
+	//int array[] = ;
 	/*for (int i = 0; i < arraySize; i++)
 	{
 		time_t seconds;
@@ -24,7 +25,9 @@ int main()
 		array[i] = rand() % arraySize + 1;
 	}*/
 	printArray(arraySize, array);
-
+	std::cin.ignore();
+	system("cls");
+	sortHeap(array, arraySize, min);
 
 	char z;
 	std::cin >> z;
@@ -36,7 +39,16 @@ int main()
 
 void sortHeap(int array[], int arraySize, bool min)
 {
-
+	int status = 0;
+	do
+	{
+		status = sortHeapStep(array, arraySize, min);
+		printArray(arraySize, array);
+		std::cin.ignore();
+		system("cls");
+	} while (status == 0);
+	std::cout << "Sorting finished." << std::endl << std::endl;
+	printArray(arraySize, array);
 }
 
 //completes one step of sorting the heap
@@ -44,8 +56,57 @@ void sortHeap(int array[], int arraySize, bool min)
 //         0 for incomplete sort
 int sortHeapStep(int array[], int arraySize, bool min)
 {
+	for (int i = 0; i < arraySize; i++)
+	{
+		if (i * 2 + 1 < arraySize)
+		{
+			if (min)
+			{
+				if (array[i] > array[2 * i + 1])
+				{
+					int temp = array[i];
+					array[i] = array[2 * i + 1];
+					array[2 * i + 1] = temp;
+					return 0;
+				}
+			}
+			else
+			{
+				if (array[i] < array[2 * i + 1])
+				{
+					int temp = array[i];
+					array[i] = array[2 * i + 1];
+					array[2 * i + 1] = temp;
+					return 0;
+				}
+			}
+			if (i * 2 + 2 < arraySize)
+			{
+				if (min)
+				{
+					if (array[i] > array[2 * i + 2])
+					{
+						int temp = array[i];
+						array[i] = array[2 * i + 2];
+						array[2 * i + 2] = temp;
+						return 0;
+					}
+				}
+				else
+				{
+					if (array[i] < array[2 * i + 2])
+					{
+						int temp = array[i];
+						array[i] = array[2 * i + 2];
+						array[2 * i + 2] = temp;
+						return 0;
+					}
+				}
+			}
+		}
+	}
 
-	return 0;
+	return 1;
 }
 
 
