@@ -14,7 +14,7 @@ void printArray(int arraySize, int array[]);
 int main()
 {
 	bool min = false;
-	const int arraySize = 15;
+	const int arraySize = 31;
 	//int array[] = { 10, 4, 9, 2, 6, 7, 1, 0, 3, 5, 8, 12, 18, 16, 11, 14, 17, 13, 15, 19};
 	int array[arraySize];
 	srand((unsigned)time(0));
@@ -120,27 +120,19 @@ void printArray(int arraySize, int array[])
 	// temporary cellSize because the above formula doesn't work.
 	int cellSize = 4;
 	int cellsInBottom = pow(2, rows - 1);
+	int lineSize = cellSize * cellsInBottom;
 	int index = 0;
 
 	for (int row = 0; row < formatRows; row++)
-	{
-		/*for (int i = pow(2, row) - 1; i < 2 * pow(2, row) - 1; i++)
-		{
-			std::cout << " " << array[i] << " ";
-			if (i > arraySize - 2)
-			{
-				break;
-			}
-		}*/
-		
+	{	
 		if (row % 2 == 0)
 		{
 				// even rows are for numbers
 				int pos = 1;
 				for (int cell = 0; cell < cellsInBottom; cell++)
 				{
-					int temp = ((cellsInBottom / (pow(2, ceil((row + 1) / 2)))) * pos) - 1;
-					if (cell == temp) // its a cell I want
+					int nextCell = ((cellsInBottom / (pow(2, ceil((row + 1) / 2)))) * pos) - 1;
+					if (cell == nextCell) // its a cell I want
 					{
 						//commented out until the correct cellSize formula is found
 						/*for (int i = 0; i < cellSize - ceil(log((double)array[index])); i++)
@@ -153,18 +145,52 @@ void printArray(int arraySize, int array[])
 					}
 					else
 					{
-						//temporary code to make debugging easier
-						std::cout << "    ";
-						/*for (int i = 0; i < cellSize; i++)
+						for (int i = 0; i < cellSize; i++)
 						{
 							std::cout << " ";
-						}*/
+						}
 					}
 				}
 		}
 		else
 		{
-			// odd rows are for formatting
+			// odd rows are for arrows
+			int upPos, downPos, upNextCell, downNextCell;
+			bool betweenParentAndChild = false;
+			upPos = 1;
+			downPos = 1;
+			for (int cell = 0; cell < cellsInBottom; cell++)
+			{
+				upNextCell = ((cellsInBottom / (pow(2, ceil((row) / 2)))) * upPos) - 1;
+				downNextCell = ((cellsInBottom / (pow(2, ceil((row + 2) / 2)))) * downPos) - 1;
+				if (cell == upNextCell)
+				{
+					std::cout << "-/| ";
+					betweenParentAndChild = false;
+					upPos++;
+					if (upNextCell == downNextCell)
+					{
+						downPos++;
+					}
+				}
+				else if (cell == downNextCell)
+				{
+					std::cout << "  /-";
+					betweenParentAndChild = true;
+					downPos++;
+				}
+				else if (betweenParentAndChild)
+				{
+					std::cout << "----";
+				}
+				else
+				{
+					for (int i = 0; i < cellSize; i++)
+					{
+						std::cout << " ";
+					}
+				}
+			}
 			std::cout << std::endl;
 		}
 
