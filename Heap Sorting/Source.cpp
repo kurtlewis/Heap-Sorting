@@ -13,14 +13,14 @@ void printArray(int arraySize, int array[]);
 
 int main()
 {
-	bool min = false;
+	bool min = true;
 	const int arraySize = 31;
 	//int array[] = { 10, 4, 9, 2, 6, 7, 1, 0, 3, 5, 8, 12, 18, 16, 11, 14, 17, 13, 15, 19};
 	int array[arraySize];
 	srand((unsigned)time(0));
 	for (int i = 0; i < arraySize; i++)
 	{
-		array[i] = rand() % arraySize + 10;
+		array[i] = rand() % arraySize + 1;
 	}
 	printArray(arraySize, array);
 	std::cin.ignore();
@@ -116,9 +116,7 @@ void printArray(int arraySize, int array[])
 	//temporary for no lines between numbers
 	int rows = ceil(log2((double)arraySize));
 	//The size of a cell is the number of digits in the largest number + 2
-	//int cellSize = ceil(log((double)arraySize)) + 2;
-	// temporary cellSize because the above formula doesn't work.
-	int cellSize = 4;
+	int cellSize = ceil(log10((double)arraySize)) + 2;
 	int cellsInBottom = pow(2, rows - 1);
 	int lineSize = cellSize * cellsInBottom;
 	int index = 0;
@@ -134,12 +132,13 @@ void printArray(int arraySize, int array[])
 					int nextCell = ((cellsInBottom / (pow(2, ceil((row + 1) / 2)))) * pos) - 1;
 					if (cell == nextCell) // its a cell I want
 					{
-						//commented out until the correct cellSize formula is found
-						/*for (int i = 0; i < cellSize - ceil(log((double)array[index])); i++)
+						// I need to add one to the value of array[index], because log10(any multiple of 10)
+						//will return a value that is one less than the actual number of digits
+						for (int i = 1; i < cellSize - ceil(log10((double)array[index] + 1)); i++)
 						{
 							std::cout << " ";
-						}*/
-						std::cout << " " << array[index] << " ";
+						}
+						std::cout << array[index] << " ";
 						index++;
 						pos++;
 					}
@@ -165,9 +164,14 @@ void printArray(int arraySize, int array[])
 				downNextCell = ((cellsInBottom / (pow(2, ceil((row + 2) / 2)))) * downPos) - 1;
 				if (cell == upNextCell)
 				{
-					std::cout << "-/| ";
+					for (int i = 1; i < cellSize - ceil(log10(arraySize)); i++)
+					{
+						std::cout << "-";
+					}
+					std::cout << "/| ";
 					betweenParentAndChild = false;
 					upPos++;
+					// Every other cell in the row below will match up with the cell of the row above it
 					if (upNextCell == downNextCell)
 					{
 						downPos++;
@@ -175,13 +179,20 @@ void printArray(int arraySize, int array[])
 				}
 				else if (cell == downNextCell)
 				{
-					std::cout << "  /-";
+					for (int i = 0; i < cellSize - ceil(log10(arraySize)); i++)
+					{
+						std::cout << " ";
+					}
+					std::cout << "/-";
 					betweenParentAndChild = true;
 					downPos++;
 				}
 				else if (betweenParentAndChild)
 				{
-					std::cout << "----";
+					for (int i = 0; i < cellSize; i++)
+					{
+						std::cout << "-";
+					}
 				}
 				else
 				{
