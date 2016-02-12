@@ -1,6 +1,8 @@
 //Kurt Lewis
 //Feb 3 2016
-//Implement a visual heap sorter because I need to learn this somehow and it seems pretty cool
+//Implement a visual heap sorter. The main goal is to show what I'm doing.
+//Thus for the sake of showing whats going on, some choices have been made to slow down the sort
+//and show individual steps.
 #include <iostream>
 #include <iomanip>
 #include <math.h>
@@ -14,6 +16,7 @@ void printArray(int arraySize, int sortedSize, int array[]);
 int main()
 {
 	bool min = false;
+	//some formatting errors will appear when using an arraySize of smaller than 10 or greater than 100
 	const int arraySize = 31;
 	int array[arraySize];
 	srand((unsigned)time(0));
@@ -32,16 +35,18 @@ int main()
 }
 
 
-//sort the heap for minimum of maximum value
-
+//sort the heap for minimum or maximum value
 void sortHeap(int array[], int arraySize, bool min)
 {
 	int status = 0;
 	int sortedSize = 0;
 	do
 	{
+		//the outer loop takes a completely sorted tree and moves the top item into the sorted section of the
+		//array, then replaces the top with the item displaced by the sorted item
 		do
 		{
+			//the inside loop completely sorts the tree
 			status = sortHeapStep(array, arraySize, sortedSize, min);
 			printArray(arraySize, sortedSize, array);
 			std::cin.ignore();
@@ -56,11 +61,15 @@ void sortHeap(int array[], int arraySize, bool min)
 	printArray(arraySize, sortedSize, array);
 }
 
-//completes one step of sorting the heap
+//completes one step of sorting the binary tree
+// If I was trying to write a faster sort, I could make multiple swaps a function call.
+// However, for the sake of showing what I'm doing, this isn't optimized.
 // returns 1 for completed sort
 //         0 for incomplete sort
 int sortHeapStep(int array[], int arraySize, int sortedSize, bool min)
 {
+	//only iterate through to arraySize - sortedSize because anything after the index 
+	// arraySize - sortedSize is already sorted
 	for (int i = 0; i < arraySize - sortedSize; i++)
 	{
 		if (i * 2 + 1 < arraySize - sortedSize)
@@ -118,9 +127,10 @@ int sortHeapStep(int array[], int arraySize, int sortedSize, bool min)
 //print the array as a formatted heap
 void printArray(int arraySize, int sortedSize, int array[])
 {
-	//for when I implement the arrows between rows of numbers
+	// formatRows are the number of rows that will be in the tree with space between rows to allow for 
+	// the building of tree diagrams
 	int formatRows = ceil(log2((double)arraySize - sortedSize)) * 2 - 1;
-	//temporary for no lines between numbers
+	// the rows are the actual number of rows containing numbers
 	int rows = ceil(log2((double)arraySize - sortedSize));
 	//The size of a cell is the number of digits in the largest number + 2
 	int cellSize = ceil(log10((double)arraySize - sortedSize)) + 2;
@@ -128,6 +138,7 @@ void printArray(int arraySize, int sortedSize, int array[])
 	int lineSize = cellSize * cellsInBottom;
 	int index = 0;
 
+	//print out the sorted portion of the array at the top
 	if (sortedSize > 0)
 	{
 		std::cout << "Currently sorted: ";
@@ -151,6 +162,7 @@ void printArray(int arraySize, int sortedSize, int array[])
 					{
 						// I need to add one to the value of array[index], because log10(any multiple of 10)
 						//will return a value that is one less than the actual number of digits
+						// this should never accidentally corrupt any results
 						for (int i = 1; i < cellSize - ceil(log10((double)array[index] + 1)); i++)
 						{
 							std::cout << " ";
@@ -170,7 +182,7 @@ void printArray(int arraySize, int sortedSize, int array[])
 		}
 		else
 		{
-			// odd rows are for arrows
+			// odd rows are for arrows representing parents and children
 			int upPos, downPos, upNextCell, downNextCell;
 			bool betweenParentAndChild = false;
 			upPos = 1;
@@ -220,9 +232,7 @@ void printArray(int arraySize, int sortedSize, int array[])
 				}
 			}
 			std::cout << std::endl;
-		}
-
-		
+		}		
 		std::cout << std::endl;
 	}
 }
