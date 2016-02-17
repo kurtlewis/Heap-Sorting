@@ -28,6 +28,8 @@ int main()
 	std::cin.ignore();
 	system("cls");
 	sortHeap(array, arraySize, min);
+	std::cout << "Sorting finished." << std::endl << std::endl;
+	printArray(arraySize, arraySize, array);
 
 	char z;
 	std::cin >> z;
@@ -57,8 +59,6 @@ void sortHeap(int array[], int arraySize, bool min)
 		array[0] = temp;
 		sortedSize++;
 	} while (arraySize - 1 != sortedSize);
-	std::cout << "Sorting finished." << std::endl << std::endl;
-	printArray(arraySize, sortedSize, array);
 }
 
 //completes one step of sorting the binary tree
@@ -133,7 +133,7 @@ void printArray(int arraySize, int sortedSize, int array[])
 	// the rows are the actual number of rows containing numbers
 	int rows = ceil(log2((double)arraySize - sortedSize));
 	//The size of a cell is the number of digits in the largest number + 2
-	int cellSize = ceil(log10((double)arraySize - sortedSize)) + 2;
+	int cellSize = ceil(log10((double)arraySize + 1)) + 2;
 	int cellsInBottom = pow(2, rows - 1);
 	int lineSize = cellSize * cellsInBottom;
 	int index = 0;
